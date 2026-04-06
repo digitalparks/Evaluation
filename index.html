@@ -8,49 +8,23 @@
         body { font-family: 'Malgun Gothic', sans-serif; text-align: center; padding: 30px; background-color: #f8f9fa; }
         h1 { color: #2c3e50; margin-bottom: 40px; }
         
-        .main-container {
-            display: flex;
-            justify-content: center;
-            gap: 40px; 
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .column {
-            display: flex;
-            flex-direction: column;
-            gap: 15px; 
-            flex: 1;
-        }
-
-        .column-title {
-            font-size: 20px;
-            font-weight: bold;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #ccc;
-            margin-bottom: 10px;
-        }
-
-        .menu-link {
-            text-decoration: none;
-            padding: 20px;
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
+        .main-container { display: flex; justify-content: center; gap: 40px; max-width: 800px; margin: 0 auto; }
+        .column { display: flex; flex-direction: column; gap: 15px; flex: 1; }
+        .column-title { font-size: 20px; font-weight: bold; padding-bottom: 10px; border-bottom: 3px solid #ccc; margin-bottom: 10px; }
+        
+        .menu-link { text-decoration: none; padding: 20px; border-radius: 10px; color: white; font-weight: bold; font-size: 16px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .menu-link:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
 
+        /* 국어 색상 */
         .korean-title { color: #27ae60; border-bottom-color: #27ae60; }
-        /* 1단원(초록), 2단원(오렌지) 색상 다르게 지정 */
         .korean-btn-1 { background-color: #2ecc71; }
         .korean-btn-2 { background-color: #e67e22; }
         
-        .math-title { color: #3498db; border-bottom-color: #3498db; }
-        .math-btn { background-color: #3498db; }
+        /* 수학 색상 (단원별로 파란색이 조금씩 짙어지게 구성) */
+        .math-title { color: #2980b9; border-bottom-color: #2980b9; }
+        .math-btn-1 { background-color: #5dade2; } 
+        .math-btn-2 { background-color: #3498db; }
+        .math-btn-3 { background-color: #2874a6; }
 
         @media (max-width: 600px) {
             .main-container { flex-direction: column; align-items: center; }
@@ -71,7 +45,9 @@
 
         <div class="column">
             <div class="column-title math-title">🔢 수학</div>
-            <a href="./math2-1-1/" class="menu-link math-btn">1단원 (세 자리 수)</a>
+            <a href="./math2-1-1/" class="menu-link math-btn-1">1단원 (세 자리 수)</a>
+            <a href="./math2-1-2/" class="menu-link math-btn-2">2단원 (여러 가지 도형)</a>
+            <a href="./math2-1-3/" class="menu-link math-btn-3">3단원 (덧셈과 뺄셈)</a>
         </div>
     </div>
 
