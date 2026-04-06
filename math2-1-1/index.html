@@ -1,1 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초2-1 수학 1단원 오답 분석 리포트</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f0f4f8; color: #333; max-width: 700px; margin: 0 auto; padding: 20px; }
+        .container { background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; font-size: 26px; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 15px; margin-bottom: 20px;}
+        p.desc { text-align: center; color: #555; margin-bottom: 25px; font-size: 15px; }
+        .question-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 25px; }
+        .checkbox-label { display: flex; flex-direction: column; align-items: center; background-color: #e2e8f0; padding: 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-weight: bold; color: #4a5568; }
+        .checkbox-label:hover { background-color: #cbd5e0; transform: translateY(-2px); }
+        input[type="checkbox"] { margin-bottom: 8px; transform: scale(1.3); accent-color: #3498db; }
+        button { width: 100%; padding: 16px; background-color: #3498db; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        button:hover { background-color: #2980b9; }
+        #result { margin-top: 30px; padding: 25px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; display: none; }
+        .feedback-item { margin-top: 20px; padding: 15px; background-color: #fff; border-left: 5px solid #e74c3c; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .feedback-title { font-weight: bold; color: #c0392b; font-size: 16px; display: block; margin-bottom: 8px;}
+        .chart-container { position: relative; width: 100%; max-width: 450px; margin: 0 auto 30px auto; }
+    </style>
+</head>
+<body>
 
+<div class="container">
+    <h1>📊 초2 수학 1단원 오답 분석</h1>
+    <p class="desc">아이가 틀린 문제 번호를 모두 선택한 후 <strong>[분석하기]</strong> 버튼을 눌러주세요.</p>
+
+    <div class="question-grid" id="checkboxes">
+        <script>
+            for(let i=1; i<=20; i++){
+                document.write(`
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="${i}"> ${i}번
+                    </label>
+                `);
+            }
+        </script>
+    </div>
+
+    <button onclick="analyze()">부족한 개념 분석하기 🚀</button>
+
+    <div id="result">
+        <div class="chart-container">
+            <canvas id="radarChart"></canvas>
+        </div>
+        <div id="feedbackText"></div>
+    </div>
+</div>
+
+<script>
+    const concepts = {
+        "100의 이해": { questions: [1, 2, 3, 4, 5], text: "100이라는 수의 개념과 '몇 백'을 이해하는 데 어려움이 있습니다. 수 모형이나 동전을 활용하여 직관적으로 이해할 수 있게 도와주세요." },
+        "수 읽고 쓰기": { questions: [6, 7, 8, 9, 10], text: "세 자리 수가 100, 10, 1 단위로 어떻게 구성되는지 파악하고 바르게 읽고 쓰는 연습이 필요합니다. 중간에 0이 들어가는 수를 주의 깊게 봐주세요." },
+        "자릿값의 이해": { questions: [11, 12, 13], text: "같은 숫자라도 백, 십, 일의 자리에 있을 때 값이 다름을 정확히 인지해야 합니다. 자릿값 판을 만들어 연습을 추천합니다." },
+        "뛰어 세기": { questions: [14, 15, 16], text: "일정한 규칙(10씩, 100씩)으로 뛰어 세는 원리가 부족합니다. 수 배열표를 보고 규칙을 찾아보는 연습을 해보세요." },
+        "수의 크기 비교": { questions: [17, 18, 19, 20], text: "세 자리 수의 크기를 비교할 때 백의 자리부터 차례대로 비교하는 방법을 헷갈려 합니다. 부등호 사용법을 익히고 숫자 카드 놀이를 해보세요." }
+    };
+
+    let myChart = null; // 차트 초기화 변수
+
+    function analyze() {
+        const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        const wrongNumbers = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+
+        const resultDiv = document.getElementById('result');
+        const feedbackTextDiv = document.getElementById('feedbackText');
+        
+        if (wrongNumbers.length === 0) {
+            alert("틀린 문항을 한 개 이상 선택해주세요.");
+            return;
+        }
+
+        const labels = Object.keys(concepts);
+        const errorCounts = [];
+        let feedbackHTML = `<h3>📝 상세 분석 코멘트</h3><hr style="border:0; height:1px; background:#e2e8f0; margin-bottom:15px;">`;
+
+        // 데이터 계산 및 텍스트 생성
+        labels.forEach(conceptName => {
+            const conceptData = concepts[conceptName];
+            const intersection = wrongNumbers.filter(x => conceptData.questions.includes(x));
+            
+            // 그래프에 들어갈 '오답 개수' 저장
+            errorCounts.push(intersection.length);
+
+            if (intersection.length > 0) {
+                feedbackHTML += `
+                    <div class="feedback-item">
+                        <span class="feedback-title">🔍 ${conceptName} (틀린 문항: ${intersection.join(', ')}번)</span>
+                        <p style="margin: 0; color: #555; line-height: 1.5;">${conceptData.text}</p>
+                    </div>
+                `;
+            }
+        });
+
+        feedbackTextDiv.innerHTML = feedbackHTML;
+        resultDiv.style.display = "block";
+
+        // 기존 차트가 있으면 지우고 새로 그리기
+        if(myChart !== null) {
+            myChart.destroy();
+        }
+
+        // 레이더 차트 (방사형 그래프) 그리기
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '영역별 오답 개수 (취약도)',
+                    data: errorCounts,
+                    backgroundColor: 'rgba(52, 152, 219, 0.4)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    pointBackgroundColor: 'rgba(231, 76, 60, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(231, 76, 60, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        angleLines: { display: true },
+                        suggestedMin: 0,
+                        suggestedMax: 5, // 문항 수가 최대 5개이므로 기준점 설정
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
