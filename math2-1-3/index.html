@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초2-1 수학 3단원 오답 분석 리포트</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f0f8ff; color: #333; max-width: 700px; margin: 0 auto; padding: 20px; }
+        .container { background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.08); border-top: 8px solid #3498db; }
+        h1 { color: #2980b9; font-size: 26px; text-align: center; border-bottom: 2px dashed #3498db; padding-bottom: 15px; margin-bottom: 20px;}
+        p.desc { text-align: center; color: #666; margin-bottom: 25px; font-size: 15px; }
+        .question-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 25px; }
+        .checkbox-label { display: flex; flex-direction: column; align-items: center; background-color: #eaf2f8; padding: 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-weight: bold; color: #2980b9; border: 1px solid #d4e6f1; }
+        .checkbox-label:hover { background-color: #d4e6f1; transform: translateY(-2px); }
+        input[type="checkbox"] { margin-bottom: 8px; transform: scale(1.3); accent-color: #3498db; }
+        button { width: 100%; padding: 16px; background-color: #3498db; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        button:hover { background-color: #2980b9; }
+        #result { margin-top: 30px; padding: 25px; background-color: #f4f6f7; border: 1px solid #e5e8e8; border-radius: 10px; display: none; }
+        .feedback-item { margin-top: 20px; padding: 15px; background-color: #fff; border-left: 5px solid #e74c3c; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .feedback-title { font-weight: bold; color: #c0392b; font-size: 16px; display: block; margin-bottom: 8px;}
+        .chart-container { position: relative; width: 100%; max-width: 450px; margin: 0 auto 30px auto; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>➕➖ 초2 수학 3단원 오답 분석</h1>
+    <p class="desc">아이가 틀린 문제 번호를 모두 선택한 후 <strong>[분석하기]</strong> 버튼을 눌러주세요.</p>
+
+    <div class="question-grid" id="checkboxes">
+        <script>
+            for(let i=1; i<=20; i++){
+                document.write(`
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="${i}"> ${i}번
+                    </label>
+                `);
+            }
+        </script>
+    </div>
+
+    <button onclick="analyze()">부족한 연산 개념 분석하기 🚀</button>
+
+    <div id="result">
+        <div class="chart-container">
+            <canvas id="radarChart"></canvas>
+        </div>
+        <div id="feedbackText"></div>
+    </div>
+</div>
+
+<script>
+    const concepts = {
+        "덧셈 원리와 계산 (받아올림)": { questions: [1, 2, 3, 4, 5, 6], text: "받아올림이 있는 두 자리 수의 덧셈 원리나 세로셈 계산 과정에서 실수가 잦습니다. 모형이나 그림을 이용해 일의 자리 10개가 모여 십의 자리 1개가 되는 '받아올림' 개념을 다시 복습하고, 세로셈 자리를 맞춰 계산하는 연습을 해보세요." },
+        "뺄셈 원리와 계산 (받아내림)": { questions: [7, 8, 9, 10, 11, 12], text: "받아내림이 있는 두 자리 수의 뺄셈에서 어려움을 겪고 있습니다. 십의 자리에서 10을 빌려와 일의 자리에서 빼는 원리를 헷갈려 할 수 있으니, 문장제 문제보다 기본 세로셈 원리를 먼저 짚어주세요." },
+        "세 수의 혼합 계산": { questions: [13, 14], text: "세 수의 덧셈과 뺄셈이 섞여 있을 때 계산 순서에서 실수가 나옵니다. 식에서 앞부분부터 차례대로 두 수씩 묶어서 계산 과정을 표시하며 푸는 연습이 필요합니다." },
+        "덧셈과 뺄셈의 관계": { questions: [15, 16], text: "덧셈식을 뺄셈식으로, 뺄셈식을 덧셈식으로 바꾸는 원리가 부족합니다. 세 수 사이의 '전체와 부분' 관계를 그림으로 그려 설명해주면 훨씬 쉽게 이해할 수 있습니다." },
+        "모르는 수(□) 구하기": { questions: [17, 18, 19, 20], text: "어떤 수를 □로 놓고 식을 세우거나, 덧셈과 뺄셈의 관계를 이용하여 □의 값을 구하는 논리적 사고를 어려워합니다. 큰 수 대신 쉬운 한 자리 수(예: 2 + □ = 5)로 먼저 원리를 연습하게 해보세요." }
+    };
+
+    let myChart = null;
+
+    function analyze() {
+        const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        const wrongNumbers = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+        const resultDiv = document.getElementById('result');
+        const feedbackTextDiv = document.getElementById('feedbackText');
+        
+        if (wrongNumbers.length === 0) {
+            alert("틀린 문항을 한 개 이상 선택해주세요.");
+            return;
+        }
+
+        const labels = Object.keys(concepts);
+        const errorCounts = [];
+        let feedbackHTML = `<h3>📝 상세 분석 코멘트</h3><hr style="border:0; height:1px; background:#d4e6f1; margin-bottom:15px;">`;
+
+        labels.forEach(conceptName => {
+            const conceptData = concepts[conceptName];
+            const intersection = wrongNumbers.filter(x => conceptData.questions.includes(x));
+            errorCounts.push(intersection.length);
+
+            if (intersection.length > 0) {
+                feedbackHTML += `
+                    <div class="feedback-item">
+                        <span class="feedback-title">🔍 ${conceptName} (틀린 문항: ${intersection.join(', ')}번)</span>
+                        <p style="margin: 0; color: #555; line-height: 1.5;">${conceptData.text}</p>
+                    </div>
+                `;
+            }
+        });
+
+        feedbackTextDiv.innerHTML = feedbackHTML;
+        resultDiv.style.display = "block";
+
+        if(myChart !== null) { myChart.destroy(); }
+
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '영역별 오답 개수 (취약도)',
+                    data: errorCounts,
+                    backgroundColor: 'rgba(52, 152, 219, 0.4)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    pointBackgroundColor: 'rgba(231, 76, 60, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(231, 76, 60, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { r: { angleLines: { display: true }, suggestedMin: 0, suggestedMax: 6, ticks: { stepSize: 1 } } },
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
