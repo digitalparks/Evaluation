@@ -2,22 +2,79 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2학년 1학기 단원평가 분석기 목록</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f8f9fa; }
-        h1 { color: #2c3e50; }
-        .menu-container { display: flex; flex-direction: column; gap: 20px; align-items: center; margin-top: 30px; }
-        .menu-link { text-decoration: none; padding: 20px; width: 250px; border-radius: 10px; color: white; font-weight: bold; font-size: 18px; transition: transform 0.2s; }
-        .math { background-color: #3498db; }
-        .korean { background-color: #e67e22; }
-        .menu-link:hover { transform: scale(1.05); }
+        body { font-family: 'Malgun Gothic', sans-serif; text-align: center; padding: 30px; background-color: #f8f9fa; }
+        h1 { color: #2c3e50; margin-bottom: 40px; }
+        
+        /* 왼쪽(국어), 오른쪽(수학)을 나누는 전체 틀 */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px; /* 두 열 사이의 간격 */
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 각 과목별 기둥(열) 설정 */
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* 버튼 사이의 위아래 간격 */
+            flex: 1;
+        }
+
+        .column-title {
+            font-size: 20px;
+            font-weight: bold;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .menu-link {
+            text-decoration: none;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .menu-link:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+
+        /* 과목별 색상 지어 */
+        .korean-title { color: #e67e22; border-bottom-color: #e67e22; }
+        .korean-btn { background-color: #e67e22; }
+        
+        .math-title { color: #3498db; border-bottom-color: #3498db; }
+        .math-btn { background-color: #3498db; }
+
+        /* 모바일 대응 (화면이 작아지면 다시 한 줄로) */
+        @media (max-width: 600px) {
+            .main-container { flex-direction: column; align-items: center; }
+            .column { width: 100%; max-width: 300px; }
+        }
     </style>
 </head>
 <body>
+
     <h1>📋 2학년 1학기 평가 분석기</h1>
-    <div class="menu-container">
-        <a href="./math2-1-1/" class="menu-link math">🔢 수학 1단원 (세 자리 수)</a>
-        <a href="./korean2-1-2/" class="menu-link korean">📖 국어 2단원 (말의 재미)</a>
+
+    <div class="main-container">
+        <div class="column">
+            <div class="column-title korean-title">📖 국어</div>
+            <a href="./korean2-1-2/" class="menu-link korean-btn">2단원 (말의 재미)</a>
+        </div>
+
+        <div class="column">
+            <div class="column-title math-title">🔢 수학</div>
+            <a href="./math2-1-1/" class="menu-link math-btn">1단원 (세 자리 수)</a>
+        </div>
     </div>
+
 </body>
 </html>
