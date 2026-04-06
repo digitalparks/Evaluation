@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초2-1 수학 2단원 오답 분석 리포트</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f0f8ff; color: #333; max-width: 700px; margin: 0 auto; padding: 20px; }
+        .container { background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.08); border-top: 8px solid #3498db; }
+        h1 { color: #2980b9; font-size: 26px; text-align: center; border-bottom: 2px dashed #3498db; padding-bottom: 15px; margin-bottom: 20px;}
+        p.desc { text-align: center; color: #666; margin-bottom: 25px; font-size: 15px; }
+        .question-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 25px; }
+        .checkbox-label { display: flex; flex-direction: column; align-items: center; background-color: #eaf2f8; padding: 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-weight: bold; color: #2980b9; border: 1px solid #d4e6f1; }
+        .checkbox-label:hover { background-color: #d4e6f1; transform: translateY(-2px); }
+        input[type="checkbox"] { margin-bottom: 8px; transform: scale(1.3); accent-color: #3498db; }
+        button { width: 100%; padding: 16px; background-color: #3498db; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        button:hover { background-color: #2980b9; }
+        #result { margin-top: 30px; padding: 25px; background-color: #f4f6f7; border: 1px solid #e5e8e8; border-radius: 10px; display: none; }
+        .feedback-item { margin-top: 20px; padding: 15px; background-color: #fff; border-left: 5px solid #e74c3c; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .feedback-title { font-weight: bold; color: #c0392b; font-size: 16px; display: block; margin-bottom: 8px;}
+        .chart-container { position: relative; width: 100%; max-width: 450px; margin: 0 auto 30px auto; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📐 초2 수학 2단원 오답 분석</h1>
+    <p class="desc">아이가 틀린 문제 번호를 모두 선택한 후 <strong>[분석하기]</strong> 버튼을 눌러주세요.</p>
+
+    <div class="question-grid" id="checkboxes">
+        <script>
+            for(let i=1; i<=20; i++){
+                document.write(`
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="${i}"> ${i}번
+                    </label>
+                `);
+            }
+        </script>
+    </div>
+
+    <button onclick="analyze()">부족한 도형 개념 분석하기 🚀</button>
+
+    <div id="result">
+        <div class="chart-container">
+            <canvas id="radarChart"></canvas>
+        </div>
+        <div id="feedbackText"></div>
+    </div>
+</div>
+
+<script>
+    const concepts = {
+        "삼각형의 이해": { questions: [1, 2, 3, 4], text: "삼각형의 특징(변 3개, 꼭짓점 3개)을 알고 모양을 찾는 데 어려움이 있습니다. 점 종이에 직접 삼각형을 그려보며 특징을 익히게 해주세요." },
+        "사각형의 이해": { questions: [5, 6, 7, 8], text: "사각형의 특징(변 4개, 꼭짓점 4개)을 이해하고, 사각형이 아닌 이유를 설명하는 연습이 필요합니다. 굽은 선이 있거나 끊어진 도형은 사각형이 될 수 없음을 알려주세요." },
+        "원과 도형 복합": { questions: [9, 10, 11, 12], text: "원 모양의 특징(둥근 선, 뾰족한 곳 없음)을 이해하고 복잡한 그림 속에서 여러 가지 도형을 찾아 세는 집중력이 필요합니다. 주변 사물에서 원, 삼각형, 사각형 모양을 찾는 놀이를 해보세요." },
+        "칠교놀이 공간 감각": { questions: [13, 14, 15], text: "칠교 조각의 구성(삼각형 5개, 사각형 2개)을 알고 조각을 돌리거나 뒤집어 모양을 맞추는 공간 감각이 부족합니다. 실제 칠교판을 만져보며 여러 가지 모양을 자유롭게 만들어보는 활동이 가장 좋습니다." },
+        "쌓기나무 추론력": { questions: [16, 17, 18, 19, 20], text: "쌓기나무로 만든 모양을 관찰하고 보이지 않는 부분을 추론하거나, 설명에 따라 똑같이 쌓는 공간 지각력이 필요합니다. 집에 있는 블록을 이용해 직접 똑같이 쌓아보고 개수를 세어보게 해주세요." }
+    };
+
+    let myChart = null;
+
+    function analyze() {
+        const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        const wrongNumbers = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+        const resultDiv = document.getElementById('result');
+        const feedbackTextDiv = document.getElementById('feedbackText');
+        
+        if (wrongNumbers.length === 0) {
+            alert("틀린 문항을 한 개 이상 선택해주세요.");
+            return;
+        }
+
+        const labels = Object.keys(concepts);
+        const errorCounts = [];
+        let feedbackHTML = `<h3>📝 상세 분석 코멘트</h3><hr style="border:0; height:1px; background:#d4e6f1; margin-bottom:15px;">`;
+
+        labels.forEach(conceptName => {
+            const conceptData = concepts[conceptName];
+            const intersection = wrongNumbers.filter(x => conceptData.questions.includes(x));
+            errorCounts.push(intersection.length);
+
+            if (intersection.length > 0) {
+                feedbackHTML += `
+                    <div class="feedback-item">
+                        <span class="feedback-title">🔍 ${conceptName} (틀린 문항: ${intersection.join(', ')}번)</span>
+                        <p style="margin: 0; color: #555; line-height: 1.5;">${conceptData.text}</p>
