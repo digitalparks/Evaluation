@@ -54,9 +54,9 @@
     const concepts = {
         "삼각형의 이해": { questions: [1, 2, 3, 4], text: "삼각형의 특징(변 3개, 꼭짓점 3개)을 알고 모양을 찾는 데 어려움이 있습니다. 점 종이에 직접 삼각형을 그려보며 특징을 익히게 해주세요." },
         "사각형의 이해": { questions: [5, 6, 7, 8], text: "사각형의 특징(변 4개, 꼭짓점 4개)을 이해하고, 사각형이 아닌 이유를 설명하는 연습이 필요합니다. 굽은 선이 있거나 끊어진 도형은 사각형이 될 수 없음을 알려주세요." },
-        "원과 도형 복합": { questions: [9, 10, 11, 12], text: "원 모양의 특징(둥근 선, 뾰족한 곳 없음)을 이해하고 복잡한 그림 속에서 여러 가지 도형을 찾아 세는 집중력이 필요합니다. 주변 사물에서 원, 삼각형, 사각형 모양을 찾는 놀이를 해보세요." },
-        "칠교놀이 공간 감각": { questions: [13, 14, 15], text: "칠교 조각의 구성(삼각형 5개, 사각형 2개)을 알고 조각을 돌리거나 뒤집어 모양을 맞추는 공간 감각이 부족합니다. 실제 칠교판을 만져보며 여러 가지 모양을 자유롭게 만들어보는 활동이 가장 좋습니다." },
-        "쌓기나무 추론력": { questions: [16, 17, 18, 19, 20], text: "쌓기나무로 만든 모양을 관찰하고 보이지 않는 부분을 추론하거나, 설명에 따라 똑같이 쌓는 공간 지각력이 필요합니다. 집에 있는 블록을 이용해 직접 똑같이 쌓아보고 개수를 세어보게 해주세요." }
+        "원과 도형 복합": { questions: [9, 10, 11, 12], text: "원 모양의 특징(둥근 선, 뾰족한 곳 없음)을 이해하고 복합적인 그림 속에서 도형을 찾아 세는 연습이 필요합니다." },
+        "칠교놀이 공간 감각": { questions: [13, 14, 15], text: "칠교 조각을 돌리거나 뒤집어 모양을 맞추는 공간 감각이 부족합니다. 실제 칠교판을 활용한 구체물 활동을 추천합니다." },
+        "쌓기나무 추론력": { questions: [16, 17, 18, 19, 20], text: "보이지 않는 쌓기나무의 개수를 추론하거나 설명에 따라 쌓는 공간 지각력이 필요합니다." }
     };
 
     let myChart = null;
@@ -86,3 +86,48 @@
                     <div class="feedback-item">
                         <span class="feedback-title">🔍 ${conceptName} (틀린 문항: ${intersection.join(', ')}번)</span>
                         <p style="margin: 0; color: #555; line-height: 1.5;">${conceptData.text}</p>
+                    </div>`;
+            }
+        });
+
+        // 결과 표시 및 데이터 업데이트
+        feedbackTextDiv.innerHTML = feedbackHTML;
+        resultDiv.style.display = 'block';
+
+        // 기존 차트가 있으면 파괴하고 새로 생성 (중복 방지)
+        if (myChart) {
+            myChart.destroy();
+        }
+
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '취약 지표 (틀린 개수)',
+                    data: errorCounts,
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    pointBackgroundColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        suggestedMax: 5,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+
+        // 결과 영역으로 부드럽게 스크롤
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
