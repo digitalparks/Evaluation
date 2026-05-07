@@ -5,31 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2학년 1학기 단원평가 분석</title>
     <style>
-        body { font-family: 'Malgun Gothic', sans-serif; text-align: center; padding: 30px; background-color: #f8f9fa; }
-        h1 { color: #2c3e50; margin-bottom: 40px; }
+        :root {
+            --ko-color-1: #f39c12;
+            --ko-color-2: #e67e22;
+            --ko-color-3: #d35400;
+            --ma-color: #5dade2;
+        }
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 { margin-bottom: 50px; font-size: 2.2rem; color: #333; }
         
-        .main-container { display: flex; justify-content: center; gap: 40px; max-width: 800px; margin: 0 auto; }
-        .column { display: flex; flex-direction: column; gap: 15px; flex: 1; }
-        .column-title { font-size: 20px; font-weight: bold; padding-bottom: 10px; border-bottom: 3px solid #ccc; margin-bottom: 10px; }
-        
-        .menu-link { text-decoration: none; padding: 20px; border-radius: 10px; color: white; font-weight: bold; font-size: 16px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .menu-link:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .main-container {
+            display: flex;
+            gap: 40px;
+            max-width: 1000px;
+            width: 100%;
+        }
 
-        /* 국어 색상 */
-        .korean-title { color: #27ae60; border-bottom-color: #27ae60; }
-        .korean-btn-1 { background-color: #f39c12; }
-        .korean-btn-2 { background-color: #e67e22; }
-        .korean-btn-3 { background-color: #d35400; }
-        
-        /* 수학 색상 */
-        .math-title { color: #2980b9; border-bottom-color: #2980b9; }
-        .math-btn-1 { background-color: #5dade2; } 
-        .math-btn-2 { background-color: #3498db; }
-        .math-btn-3 { background-color: #2874a6; }
+        .subject-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
 
-        @media (max-width: 600px) {
-            .main-container { flex-direction: column; align-items: center; }
-            .column { width: 100%; max-width: 300px; }
+        .subject-title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid;
+        }
+
+        .ko-title { color: #27ae60; border-color: #27ae60; }
+        .ma-title { color: #2980b9; border-color: #2980b9; }
+
+        /* 공통 버튼 스타일 */
+        .ko-btn, .ma-btn {
+            display: block;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            color: white;
+            transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .ko-btn:hover, .ma-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        /* 국어 버튼 색상 (점점 진해지는 효과) */
+        .ko-unit1 { background-color: #f39c12; }
+        .ko-unit2 { background-color: #e67e22; }
+        .ko-unit3 { background-color: #d35400; }
+        .ko-unit4 { background-color: #c0392b; } /* 4단원용 새로운 진한 색상 */
+
+        /* 수학 버튼 색상 */
+        .ma-btn { background-color: #5dade2; }
+
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; }
         }
     </style>
 </head>
@@ -38,19 +85,20 @@
     <h1>📋 2학년 1학기 단원평가 분석</h1>
 
     <div class="main-container">
-        <div class="column">
-            <div class="column-title korean-title">📖 국어</div>
-            <a href="./korean2-1-1/" class="menu-link korean-btn-1">1단원 (만나서 반가워요!)</a>
-            <a href="./korean2-1-2/" class="menu-link korean-btn-2">2단원 (말의 재미가 솔솔)</a>
-            <a href="./korean2-1-3/" class="menu-link korean-btn-3">3단원 (겪은 일을 나타내요)</a>
-            <a href="./korean2-1-4/index.html" class="ko-btn unit4">4단원 (마음을 짐작해요)</a>
+        <div class="subject-column">
+            <div class="subject-title ko-title">📖 국어</div>
+            <a href="./korean2-1-1/index.html" class="ko-btn ko-unit1">1단원 (만나서 반가워요!)</a>
+            <a href="./korean2-1-2/index.html" class="ko-btn ko-unit2">2단원 (말의 재미가 솔솔)</a>
+            <a href="./korean2-1-3/index.html" class="ko-btn ko-unit3">3단원 (겪은 일을 나타내요)</a>
+            <a href="./korean2-1-4/index.html" class="ko-btn ko-unit4">4단원 (마음을 짐작해요)</a>
         </div>
 
-        <div class="column">
-            <div class="column-title math-title">🔢 수학</div>
-            <a href="./math2-1-1/" class="menu-link math-btn-1">1단원 (세 자리 수)</a>
-            <a href="./math2-1-2/" class="menu-link math-btn-2">2단원 (여러 가지 도형)</a>
-            <a href="./math2-1-3/" class="menu-link math-btn-3">3단원 (덧셈과 뺄셈)</a>
+        <div class="subject-column">
+            <div class="subject-title ma-title">🔢 수학</div>
+            <a href="./math2-1-1/index.html" class="ma-btn">1단원 (세 자리 수)</a>
+            <a href="./math2-1-2/index.html" class="ma-btn">2단원 (여러 가지 도형)</a>
+            <a href="./math2-1-3/index.html" class="ma-btn">3단원 (덧셈과 뺄셈)</a>
+            <div style="padding: 20px; text-align: center; color: #ccc; border: 2px dashed #ddd; border-radius: 10px;">4단원 준비 중</div>
         </div>
     </div>
 
