@@ -51,27 +51,27 @@
 </div>
 
 <script>
-    // HWP 시험지 분석표를 바탕으로 한 문항 매핑
+    // HWP 시험지 문항 분석표를 정확히 반영한 데이터 [cite: 1]
     const concepts = {
-        "받침과 어휘의 이해": { 
-            questions: [1, 5, 8, 10, 12], 
-            text: "받침의 개수나 낱말의 정확한 뜻을 파악하는 데 어려움이 있습니다. '꽃'이나 '값'처럼 받침이 복잡한 낱말들을 눈으로 익히고 뜻을 문장 속에서 찾아보는 연습이 필요합니다." 
+        "낱말의 특징과 받침": { 
+            questions: [1, 5, 8, 12], 
+            text: "낱말의 받침 개수나 특징을 파악하는 기초 어휘력이 필요한 영역입니다. [cite: 1] 받침이 복잡한 낱말의 모양을 눈으로 익히는 연습이 도움이 됩니다. [cite: 1]" 
         },
         "낱말 바르게 읽기": { 
             questions: [3, 4, 6, 9], 
-            text: "겹받침이 있는 낱말을 소리 내어 읽을 때 발음 규칙을 헷갈려 합니다. [안자], [막따], [끈따] 처럼 실제 소리와 글자가 어떻게 다른지 소리 내어 읽는 연습을 반복해 보세요." 
+            text: "겹받침이 있는 낱말을 소리 내어 읽을 때 발음 규칙을 이해하는 단계입니다. [cite: 1] '맑다[막따]', '끊다[끈따]'처럼 소리 나는 방식을 반복해서 읽어보게 해주세요. [cite: 7, 8, 9, 10]" 
         },
         "글과 시의 내용 파악": { 
-            questions: [2, 7, 11, 13, 17, 19, 20], 
-            text: "글이나 시를 읽고 중심 내용을 찾거나 세부 정보를 확인하는 부분입니다. 누가, 무엇을, 어떻게 했는지 질문을 던지며 글을 꼼꼼히 읽는 습관을 길러주세요." 
+            questions: [2, 7, 10, 11, 13, 17, 19, 20], 
+            text: "글의 핵심 내용을 찾고 세부 정보를 확인하는 이해력 영역입니다. [cite: 1] 누가, 어디서, 무엇을 했는지 질문을 던지며 꼼꼼히 읽는 습관을 길러주세요. [cite: 1]" 
         },
-        "인물의 마음 짐작하기": { 
+        "인물의 마음 파악": { 
             questions: [14, 18], 
-            text: "인물의 상황이나 표정, 말투를 보고 어떤 마음일지 추측하는 것을 어려워합니다. '내가 주인공이라면 어땠을까?'라고 물으며 인물의 처지에 공감하며 읽는 태도가 중요합니다." 
+            text: "인물의 상황이나 말을 통해 어떤 마음일지 짐작하는 능력을 평가합니다. [cite: 1] '내가 주인공이라면 어땠을까?'라고 물으며 공감하며 읽는 태도가 중요합니다. [cite: 1]" 
         },
-        "실감 나게 표현하기": { 
+        "몸짓과 분위기 표현": { 
             questions: [15, 16], 
-            text: "글의 분위기나 인물의 마음에 어울리는 몸짓과 말투로 표현하는 역량입니다. 연극 놀이를 하듯 상황극을 통해 인물의 마음에 어울리는 실감 나는 말하기 경험을 쌓게 해주세요." 
+            text: "시의 분위기에 어울리는 몸짓으로 표현하는 역량입니다. [cite: 1] 상황에 맞는 적절한 동작이나 말투를 직접 실연해 보는 활동을 추천합니다. [cite: 1]" 
         }
     };
 
@@ -90,7 +90,7 @@
 
         const labels = Object.keys(concepts);
         const errorCounts = [];
-        let feedbackHTML = `<h3>🔍 상세 분석 코멘트</h3><hr style="border:0; height:1px; background:#f5deb3; margin-bottom:15px;">`;
+        let feedbackHTML = `<h3>🔍 영역별 세부 코멘트</h3><hr style="border:0; height:1px; background:#f5deb3; margin-bottom:15px;">`;
 
         labels.forEach(conceptName => {
             const conceptData = concepts[conceptName];
@@ -124,24 +124,15 @@
                     borderColor: 'rgba(243, 156, 18, 1)',
                     pointBackgroundColor: 'rgba(46, 204, 113, 1)',
                     pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgba(46, 204, 113, 1)',
                     borderWidth: 2
                 }]
             },
             options: {
                 responsive: true,
                 scales: { 
-                    r: { 
-                        angleLines: { display: true }, 
-                        suggestedMin: 0, 
-                        suggestedMax: 7, 
-                        ticks: { stepSize: 1 } 
-                    } 
+                    r: { suggestedMin: 0, suggestedMax: 6, ticks: { stepSize: 1 } } 
                 },
-                plugins: { 
-                    legend: { position: 'bottom' } 
-                }
+                plugins: { legend: { position: 'bottom' } }
             }
         });
         
