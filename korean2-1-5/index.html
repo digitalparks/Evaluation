@@ -51,23 +51,105 @@
 </div>
 
 <script>
+    // 5단원 시험지 이원분류표 기준 문항 매핑 완료
     const concepts = {
         "글의 내용 파악하기": { 
             questions: [1, 4, 8, 12], 
-            text: "글을 읽고 일어난 사건이나 선후 관계, 핵심 세부 정보를 파악하는 데 미흡함이 있습니다. 글의 흐름을 따라가며 '누가, 언제, 무엇을 했는지' 짚어가며 읽는 연습이 필요합니다." 
+            text: "글을 읽고 일어난 사건의 순서나 핵심 세부 정보를 파악하는 문해력 영역입니다. 글을 읽을 때 '누가, 언제, 무엇을 했는지' 확인하며 읽는 연습이 필요합니다." 
         },
         "문장 자연스럽게 띄어 읽기": { 
             questions: [2, 17], 
-            text: "문장 성분에 따라 알맞은 위치에서 쉬어 읽는 규칙을 헷갈려 합니다. ∨(조금 쉬기)와 ⩔(길게 쉬기) 부호를 문장에 직접 표시해 보며 소리 내어 읽는 연습을 추천합니다." 
+            text: "문장 성분에 따라 알맞은 위치에서 알맞게 쉬어 읽는 규칙을 헷갈려 합니다. 문장 부호와 의미 단위에 맞춰 소리 내어 읽는 연습을 추천합니다." 
         },
         "마음을 표현하는 말 쓰기": { 
             questions: [3, 20], 
-            text: "상황과 인물의 처지에 어울리는 반가움, 미안함 등의 감정을 글로 알맞게 표현하는 단계입니다. 일상에서 고마운 일이나 미안한 상황을 문장으로 직접 완성하는 대화식 독려가 좋습니다." 
+            text: "상황과 인물의 처지에 어울리는 감정(반가움, 미안함 등)을 문장으로 알맞게 표현하는 단계입니다. 일상생활에서 자신의 감정을 직접 글로 적어보는 연습이 도움이 됩니다." 
         },
         "인물의 마음과 행동 찾기": { 
             questions: [5], 
-            text: "글에 직접 드러난 구체적인 말과 행동 속에서 인물의 성향이나 의도(격려, 응원 등)를 짚어내는 역량입니다. 인물의 대사가 어떤 마음에서 나온 것인지 본문에서 단서를 찾는 훈련이 필요합니다." 
+            text: "글에 드러난 인물의 구체적인 말และ 행동 속에서 인물의 마음(격려, 응원 등)을 짚어내는 역량입니다. 이야기 속 인물의 대사가 어떤 마음에서 나온 것인지 본문에서 단서를 찾는 훈련이 필요합니다." 
         },
         "인물의 마음 짐작하기": { 
             questions: [6, 7, 10, 11, 18], 
-            text: "인
+            text: "인물이 처한 상황과 대사를 바탕으로 직접 드러나지 않은 속마음을 추론하는 힘이 약합니다. '내가 주인공이라면 어땠을까?' 하고 처지를 바꾸어 공감하며 읽도록 도와주세요." 
+        },
+        "올바른 어휘와 문장 쓰기": { 
+            questions: [9, 13, 14, 15, 16], 
+            text: "낱말의 뜻을 정확히 알고, 형태나 발음이 비슷해 혼동하기 쉬운 낱말(다치다/닫히다, 늘이다/느리다, 걸음/거름)을 구별하는 영역입니다. 문맥에 맞는 정확한 낱말 사용 훈련이 필요합니다." 
+        },
+        "표정과 감정 연결하기": { 
+            questions: [19], 
+            text: "인물의 기분 변화나 대사(눈이 휘둥그레짐, 울상, 비쭉비쭉)에 어울리는 시각적 표정을 인지하는 영역입니다. 다양한 얼굴 표정 그림이나 삽화를 보며 감정과 매칭해보는 놀이를 추천합니다." 
+        }
+    };
+
+    let myChart = null;
+
+    function analyze() {
+        try {
+            const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const wrongNumbers = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+            const resultDiv = document.getElementById('result');
+            const feedbackTextDiv = document.getElementById('feedbackText');
+            
+            if (wrongNumbers.length === 0) {
+                alert("틀린 문항을 한 개 이상 선택해주세요.");
+                return;
+            }
+
+            const labels = Object.keys(concepts);
+            const errorCounts = [];
+            let feedbackHTML = `<h3>🔍 영역별 세부 코멘트</h3><hr style="border:0; height:1px; background:#f5deb3; margin-bottom:15px;">`;
+
+            labels.forEach(conceptName => {
+                const conceptData = concepts[conceptName];
+                const intersection = wrongNumbers.filter(x => conceptData.questions.includes(x));
+                errorCounts.push(intersection.length);
+
+                if (intersection.length > 0) {
+                    feedbackHTML += `
+                        <div class="feedback-item">
+                            <span class="feedback-title">📍 ${conceptName} (틀린 문항: ${intersection.join(', ')}번)</span>
+                            <p style="margin: 0; color: #555; line-height: 1.5;">${conceptData.text}</p>
+                        </div>
+                    `;
+                }
+            });
+
+            feedbackTextDiv.innerHTML = feedbackHTML;
+            resultDiv.style.display = "block";
+
+            if (typeof Chart !== 'undefined') {
+                if (myChart !== null) { myChart.destroy(); }
+                const ctx = document.getElementById('radarChart').getContext('2d');
+                myChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '영역별 오답 개수 (취약도)',
+                            data: errorCounts,
+                            backgroundColor: 'rgba(243, 156, 18, 0.4)',
+                            borderColor: 'rgba(243, 156, 18, 1)',
+                            pointBackgroundColor: 'rgba(46, 204, 113, 1)',
+                            pointBorderColor: '#fff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: { 
+                            r: { suggestedMin: 0, suggestedMax: 5, ticks: { stepSize: 1 } } 
+                        },
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+            window.scrollTo({ top: resultDiv.offsetTop, behavior: 'smooth' });
+        } catch (error) {
+            alert("로딩 오류가 발생했습니다. 새로고침 후 다시 시도해 주세요.");
+        }
+    }
+</script>
+</body>
+</html>
