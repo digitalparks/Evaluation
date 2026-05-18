@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초2-1 국어 5단원 오답 분석 리포트</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: #fdf5e6; color: #333; max-width: 700px; margin: 0 auto; padding: 20px; }
+        .container { background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.08); border-top: 8px solid #f39c12; }
+        h1 { color: #d35400; font-size: 26px; text-align: center; border-bottom: 2px dashed #f39c12; padding-bottom: 15px; margin-bottom: 20px;}
+        p.desc { text-align: center; color: #666; margin-bottom: 25px; font-size: 15px; }
+        .question-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 25px; }
+        .checkbox-label { display: flex; flex-direction: column; align-items: center; background-color: #faebd7; padding: 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-weight: bold; color: #d35400; border: 1px solid #f5deb3; }
+        .checkbox-label:hover { background-color: #f5deb3; transform: translateY(-2px); }
+        input[type="checkbox"] { margin-bottom: 8px; transform: scale(1.3); accent-color: #f39c12; }
+        button { width: 100%; padding: 16px; background-color: #f39c12; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        button:hover { background-color: #d35400; }
+        #result { margin-top: 30px; padding: 25px; background-color: #fff8dc; border: 1px solid #eee8aa; border-radius: 10px; display: none; }
+        .feedback-item { margin-top: 20px; padding: 15px; background-color: #fff; border-left: 5px solid #27ae60; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .feedback-title { font-weight: bold; color: #27ae60; font-size: 16px; display: block; margin-bottom: 8px;}
+        .chart-container { position: relative; width: 100%; max-width: 450px; margin: 0 auto 30px auto; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📝 초2 국어 5단원 오답 분석</h1>
+    <p class="desc">아이가 틀린 문제 번호를 모두 선택한 후 <strong>[분석하기]</strong> 버튼을 눌러주세요.</p>
+
+    <div class="question-grid" id="checkboxes">
+        <script>
+            for(let i=1; i<=20; i++){
+                document.write(`
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="${i}"> ${i}번
+                    </label>
+                `);
+            }
+        </script>
+    </div>
+
+    <button onclick="analyze()">부족한 학습 영역 분석하기 🚀</button>
+
+    <div id="result">
+        <div class="chart-container">
+            <canvas id="radarChart"></canvas>
+        </div>
+        <div id="feedbackText"></div>
+    </div>
+</div>
+
+<script>
+    const concepts = {
+        "글의 내용 파악하기": { 
+            questions: [1, 4, 8, 12], 
+            text: "글을 읽고 일어난 사건이나 선후 관계, 핵심 세부 정보를 파악하는 데 미흡함이 있습니다. 글의 흐름을 따라가며 '누가, 언제, 무엇을 했는지' 짚어가며 읽는 연습이 필요합니다." 
+        },
+        "문장 자연스럽게 띄어 읽기": { 
+            questions: [2, 17], 
+            text: "문장 성분에 따라 알맞은 위치에서 쉬어 읽는 규칙을 헷갈려 합니다. ∨(조금 쉬기)와 ⩔(길게 쉬기) 부호를 문장에 직접 표시해 보며 소리 내어 읽는 연습을 추천합니다." 
+        },
+        "마음을 표현하는 말 쓰기": { 
+            questions: [3, 20], 
+            text: "상황과 인물의 처지에 어울리는 반가움, 미안함 등의 감정을 글로 알맞게 표현하는 단계입니다. 일상에서 고마운 일이나 미안한 상황을 문장으로 직접 완성하는 대화식 독려가 좋습니다." 
+        },
+        "인물의 마음과 행동 찾기": { 
+            questions: [5], 
+            text: "글에 직접 드러난 구체적인 말과 행동 속에서 인물의 성향이나 의도(격려, 응원 등)를 짚어내는 역량입니다. 인물의 대사가 어떤 마음에서 나온 것인지 본문에서 단서를 찾는 훈련이 필요합니다." 
+        },
+        "인물의 마음 짐작하기": { 
+            questions: [6, 7, 10, 11, 18], 
+            text: "인
