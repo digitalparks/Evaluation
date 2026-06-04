@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초등 수학 2-1 4단원 길이 재기 오답 분석 리포트</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+        }
+        body {
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 40px 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+            font-size: 28px;
+        }
+        .header p {
+            color: #7f8c8d;
+            margin: 0;
+            font-size: 16px;
+        }
+        .section-title {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        .checkbox-item {
+            position: relative;
+        }
+        .checkbox-item input[type="checkbox"] {
+            display: none;
+        }
+        .checkbox-item label {
+            display: block;
+            background-color: #e2e8f0;
+            text-align: center;
+            padding: 15px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #4a5568;
+            transition: all 0.2s ease;
+        }
+        .checkbox-item label:hover {
+            background-color: #cbd5e0;
+        }
+        .checkbox-item input[type="checkbox"]:checked + label {
+            background-color: #e74c3c;
+            color: #ffffff;
+        }
+        .btn-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .btn-analysis {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3);
+            transition: all 0.2s ease;
+        }
+        .btn-analysis:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .result-container {
+            display: none;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+        .chart-wrapper {
+            max-width: 450px;
+            margin: 0 auto 40px auto;
+        }
+        .feedback-section {
+            margin-top: 30px;
+        }
+        .feedback-card {
+            background: #ffffff;
+            border-left: 5px solid #e74c3c;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .feedback-card h3 {
+            margin: 0 0 10px 0;
+            color: #c0392b;
+            font-size: 16px;
+        }
+        .feedback-card p {
+            margin: 0;
+            color: #555;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        .perfect-score {
+            text-align: center;
+            padding: 40px 0;
+            color: #27ae60;
+        }
+        .perfect-score h2 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>초등 수학 2학년 1학기</h1>
+        <p>4단원. 길이 재기 - 단원평가 오답 분석 리포트</p>
+    </div>
+
+    <div class="section-title">틀린 문항을 선택하세요 (총 20문항)</div>
+    <div id="quizGrid" class="grid-container"></div>
+
+    <div class="btn-container">
+        <button class="btn-analysis" onclick="analyzeWrongAnswers()">오답 리포트 생성하기</button>
+    </div>
+
+    <div id="resultContainer" class="result-container">
+        <div class="section-title" style="text-align: center; font-size: 22px; margin-bottom: 30px;">📊 AI 맞춤형 성취도 분석 결과</div>
+        
+        <div class="chart-wrapper">
+            <canvas id="analysisChart"></canvas>
+        </div>
+
+        <div class="section-title">💡 영역별 맞춤형 클리닉 및 가이드</div>
+        <div id="feedbackContainer" class="feedback-section"></div>
+    </div>
+</div>
+
+<script>
+    // 총 문항 수 정의
+    const totalQuestions = 20;
+
+    // 2-1 4단원 길이 재기 성취기준별 개념 및 피드백 데이터 매핑
+    const concepts = {
+        "직관적 비교 및 단위 도입 필요성": {
+            questions: [1, 2, 3, 4, 5, 6],
+            text: "구체물의 길이를 직접 비교하거나, 몸의 일부분(뼘, 발 등) 및 임의 단위(볼펜, 지우개)를 사용하여 재어보는 영역입니다. 단위의 크기가 클수록 재어 나타낸 횟수가 적어진다는 성취기준 개념을 혼동했을 수 있습니다. 다양한 구체물을 직접 손으로 만지고 비교하며 '기준 단위'가 클수록 숫자가 작아지는 관계를 직관적으로 깨닫도록 실제 활동 중심의 보충 지도를 권장합니다."
+        },
+        "1cm의 이해 및 측정 능력": {
+            questions: [8, 9, 10, 11, 12, 13, 14, 15],
+            text: "길이의 표준 단위인 1cm를 알고 자를 이용해 정확히 측정하는 핵심 측정 영역입니다. 눈금 '0'에 물건의 한쪽 끝을 맞추지 못했거나, 자의 눈금을 정확하게 읽지 못하는 경우가 많습니다. 혹은 자의 시작점이 0이 아닌 다른 숫자(예: 중간이 잘린 형태)에서 출발할 때 두 눈금 사이의 칸수를 세는 연습이 부족할 수 있으므로, 자를 올바르게 대고 읽는 규칙을 반복하여 기초를 다져야 합니다."
+        },
+        "길이 어림하기": {
+            questions: [16, 17, 18, 19, 20],
+            text: "약 몇 cm가 되는지 직관과 경험을 바탕으로 길이를 어림해보는 수학적 사고력 영역입니다. 주변에 있는 1cm 단위의 기준(예: 손톱 너비 등)을 명확히 인지하고, 이를 바탕으로 '약 0cm'라고 표현하는 감각이 요구됩니다. 일상생활 속 가구, 학용품 등의 실제 길이를 먼저 추측해보고 눈님자로 측정값을 확인하여 어림 감각의 오차를 줄여나가는 피드백이 매우 효과적입니다."
+        },
+        "창의 융합 및 사고력 측정": {
+            questions: [7],
+            text: "주어진 조건(1cm, 2cm, 3cm 막대)을 조합하여 목표 길이(7cm)를 만들어내는 문제 해결력 영역입니다. 단순 계산이 아닌 단위를 직접 결합해보며 길이의 덧셈적 속성을 깊이 있게 이해해야 합니다. 구체물 카드를 직접 이리저리 배치해보며 여러 가지 조합 방법을 스스로 찾아내도록 유도하여 탐구 역량을 길러주세요."
+        }
+    };
+
+    // 페이지 로드 시 동적으로 20개의 체크박스 문항 생성
+    window.onload = function() {
+        const grid = document.getElementById('quizGrid');
+        for (let i = 1; i <= totalQuestions; i++) {
+            const item = document.createElement('div');
+            item.className = 'checkbox-item';
+            item.innerHTML = `
+                <input type="checkbox" id="q${i}" value="${i}">
+                <label for="q${i}">${i}번</label>
+            `;
+            grid.appendChild(item);
+        }
+    };
+
+    let analysisChart = null; // Chart 객체 전역 전역 변수
+
+    // 오답 분석 함수
+    function analyzeWrongAnswers() {
+        // 체크된 문항 수집
+        const checkedBoxes = document.querySelectorAll('.grid-container input[type="checkbox"]:checked');
+        const wrongQuestions = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+
+        const resultContainer = document.getElementById('resultContainer');
+        const feedbackContainer = document.getElementById('feedbackContainer');
+        
+        // 결과창 표시
+        resultContainer.style.display = 'block';
+        feedbackContainer.innerHTML = '';
+
+        // 오답이 하나도 없을 때 (100점 완벽한 점수 일 때)
+        if (wrongQuestions.length === 0) {
+            feedbackContainer.innerHTML = `
+                <div class="perfect-score">
+                    <h2>🎉 만점입니다! 아주 훌륭해요! 🎉</h2>
+                    <p>4단원 '길이 재기'의 모든 성취기준을 완벽하게 달성했습니다.<br>구체물의 비교부터 표준 단위(cm)의 사용, 길이 어림하기까지 탁월한 수학적 감각을 지니고 있습니다.</p>
+                </div>
+            `;
+            if (analysisChart) {
+                analysisChart.destroy();
+                analysisChart = null;
+            }
+            return;
+        }
+
+        // 영역별 성취도 계산용 데이터 추출
+        const labels = [];
+        const scoreData = []; // 각 영역별 오답 비중을 고려한 성취 백분율 (100점 만점 기준 점수)
+
+        // 차트용 최고 문항 수 세팅을 위해 계산
+        let maxGroupSize = 0;
+        for (const concept in concepts) {
+            if (concepts[concept].questions.length > maxGroupSize) {
+                maxGroupSize = concepts[concept].questions.length;
+            }
+        }
+
+        // 개념 단위 순회하며 점수 산출 및 피드백 출력
+        for (const [conceptName, details] of Object.entries(concepts)) {
+            labels.push(conceptName);
+            
+            // 전체 해당 개념 문항 중 오답 개수 파악
+            const totalInConcept = details.questions.length;
+            const wrongInConcept = details.questions.filter(q => wrongQuestions.includes(q)).length;
+            
+            // 성취도 점수 산출 (맞은 개수 비율을 100점 만점으로 환산)
+            const successRate = Math.round(((totalInConcept - wrongInConcept) / totalInConcept) * 100);
+            scoreData.push(successRate);
+
+            // 오답이 존재하는 영역만 맞춤형 피드백 카드 추가
+            if (wrongInConcept > 0) {
+                const card = document.createElement('div');
+                card.className = 'feedback-card';
+                card.innerHTML = `
+                    <h3>[${conceptName}] - 취약 문항: ${details.questions.filter(q => wrongQuestions.includes(q)).join(', ')}번</h3>
+                    <p>${details.text}</p>
+                `;
+                feedbackContainer.appendChild(card);
+            }
+        }
+
+        // Chart.js 레이더 차트 생성 및 갱신
+        const ctx = document.getElementById('analysisChart').getContext('2d');
+        
+        if (analysisChart) {
+            analysisChart.destroy(); // 기존 차트가 존재하면 초기화하여 덮어쓰기 방지
+        }
+
+        analysisChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '영역별 성취도 (%)',
+                    data: scoreData,
+                    backgroundColor: 'rgba(52, 152, 219, 0.4)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(52, 152, 219, 1)'
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: { display: true },
+                        suggestedMin: 0,
+                        suggestedMax: 100,
+                        ticks: { stepSize: 20 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 리포트 생성 위치로 자연스럽게 스크롤 이동
+        resultContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
