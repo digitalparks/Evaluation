@@ -3,112 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2학년 1학기 단원평가 분석</title>
+    <title>학습 평가 대시보드</title>
     <style>
         :root {
-            --ko-color-1: #f39c12;
-            --ko-color-2: #e67e22;
-            --ko-color-3: #d35400;
-            --ma-color: #5dade2;
-        }
-        body {
-            font-family: 'Malgun Gothic', sans-serif;
-            background-color: #f5f7fa;
-            margin: 0;
-            padding: 50px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 { margin-bottom: 50px; font-size: 2.2rem; color: #333; }
-        
-        .main-container {
-            display: flex;
-            gap: 40px;
-            max-width: 1000px;
-            width: 100%;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #212529;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --ko-color: #e8590c;
+            --ko-bg: #fff5f0;
+            --ma-color: #1098ad;
+            --ma-bg: #e3fafc;
         }
 
-        .subject-column {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #111;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .subject-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
         }
 
         .subject-title {
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
         }
 
-        .ko-title { color: #27ae60; border-color: #27ae60; }
-        .ma-title { color: #2980b9; border-color: #2980b9; }
+        .subject-card.korean .subject-title {
+            color: var(--ko-color);
+            border-bottom-color: var(--ko-color);
+        }
 
-        /* 공통 버튼 스타일 */
-        .ko-btn, .ma-btn {
+        .subject-card.math .subject-title {
+            color: var(--ma-color);
+            border-bottom-color: var(--ma-color);
+        }
+
+        .unit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
             display: block;
-            padding: 20px;
-            text-align: center;
-            text-decoration: none;
+            padding: 15px 20px;
             border-radius: 10px;
-            font-weight: bold;
-            color: white;
-            transition: 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
         }
 
-        .ko-btn:hover, .ma-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        .ko-btn {
+            color: var(--ko-color);
+            background-color: var(--ko-bg);
+            border: 1px solid rgba(232, 89, 12, 0.2);
         }
 
-        /* 국어 버튼 색상 (단원이 올라갈수록 조화롭게 깊어지는 색감) */
-        .ko-unit1 { background-color: #f39c12; }
-        .ko-unit2 { background-color: #e67e22; }
-        .ko-unit3 { background-color: #d35400; }
-        .ko-unit4 { background-color: #c0392b; } 
-        .ko-unit5 { background-color: #b03a2e; } 
-        .ko-unit6 { background-color: #a93226; } 
-        .ko-unit7 { background-color: #922b21; } 
-        .ko-unit8 { background-color: #7b241c; } 
+        .ko-btn:hover {
+            background-color: var(--ko-color);
+            color: #fff;
+            transform: translateY(-2px);
+        }
 
-        /* 수학 버튼 색상 */
-        .ma-btn { background-color: #5dade2; }
+        .ma-btn {
+            color: var(--ma-color);
+            background-color: var(--ma-bg);
+            border: 1px solid rgba(16, 152, 173, 0.2);
+        }
 
-        @media (max-width: 768px) {
-            .main-container { flex-direction: column; }
+        .ma-btn:hover {
+            background-color: var(--ma-color);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .ready-box {
+            padding: 15px 20px;
+            border-radius: 10px;
+            background-color: #f1f3f5;
+            color: #adb5bd;
+            border: 1px dashed #ced4da;
+            font-weight: 500;
+            font-size: 1.05rem;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <h1>📋 2학년 1학기 단원평가 분석</h1>
+<div class="container">
+    <header>
+        <h1>학업 성취도 평가 대시보드</h1>
+        <p>단원별 평가 결과를 확인하고 부족한 부분을 보완해보세요.</p>
+    </header>
 
-    <div class="main-container">
-        <div class="subject-column">
-            <div class="subject-title ko-title">📖 국어</div>
-            <a href="./korean2-1-1/index.html" class="ko-btn ko-unit1">1단원 (만나서 반가워요!)</a>
-            <a href="./korean2-1-2/index.html" class="ko-btn ko-unit2">2단원 (말의 재미가 솔솔)</a>
-            <a href="./korean2-1-3/index.html" class="ko-btn ko-unit3">3단원 (겪은 일을 나타내요)</a>
-            <a href="./korean2-1-4/index.html" class="ko-btn ko-unit4">4단원 (분위기를 살려 읽어요)</a>
-            <a href="./korean2-1-5/index.html" class="ko-btn ko-unit5">5단원 (마음을 짐작해요)</a>
-            <a href="./korean2-1-6/index.html" class="ko-btn ko-unit6">6단원 (자신의 생각을 표현해요)</a>
-            <a href="./korean2-1-7/index.html" class="ko-btn ko-unit7">7단원 (마음을 담아서 말해요)</a>
-            <a href="./korean2-1-8/index.html" class="ko-btn ko-unit8">8단원 (다양한 작품을 감상해요)</a>
+    <div class="grid-container">
+        <div class="subject-card korean">
+            <h2 class="subject-title">국어</h2>
+            <div class="unit-list">
+                <a href="./ko-1/index.html" class="btn ko-btn ko-unit1">1단원. 시를 즐겨요</a>
+                <a href="./ko-2/index.html" class="btn ko-btn ko-unit2">2단원. 내용을 간추려요</a>
+                <a href="./ko-3/index.html" class="btn ko-btn ko-unit3">3단원. 느낌을 살려 말해요</a>
+                <div class="ready-box">4단원 준비 중</div>
+            </div>
         </div>
 
-        <div class="subject-column">
-            <div class="subject-title ma-title">🔢 수학</div>
-            <a href="./math2-1-1/index.html" class="ma-btn">1단원 (세 자리 수)</a>
-            <a href="./math2-1-2/index.html" class="ma-btn">2단원 (여러 가지 도형)</a>
-            <a href="./math2-1-3/index.html" class="ma-btn">3단원 (덧셈과 뺄셈)</a>
-            <div style="padding: 20px; text-align: center; color: #ccc; border: 2px dashed #ddd; border-radius: 10px;">4단원 준비 중</div>
+        <div class="subject-card math">
+            <h2 class="subject-title">수학</h2>
+            <div class="unit-list">
+                <a href="./ma-1/index.html" class="btn ma-btn">1단원. 세 자리 수</a>
+                <a href="./ma-2/index.html" class="btn ma-btn">2단원. 여러 가지 도형</a>
+                <a href="./ma-3/index.html" class="btn ma-btn">3단원. 덧셈과 뺄셈</a>
+                <a href="./ma-4/index.html" class="btn ma-btn">4단원. 길이재기</a>
+                <div class="ready-box">5단원 준비 중</div>
+            </div>
         </div>
     </div>
+</div>
 
 </body>
 </html>
