@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>학습 평가 대시보드</title>
+
     <style>
         :root {
             --bg-color: #f8f9fa;
@@ -11,38 +12,54 @@
             --text-main: #212529;
             --text-muted: #6c757d;
             --border-color: #dee2e6;
+
             --ko-color: #e8590c;
             --ko-bg: #fff5f0;
+
             --ma-color: #1098ad;
             --ma-bg: #e3fafc;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
             margin: 0;
             padding: 40px 20px;
+
+            font-family:
+                "Pretendard",
+                -apple-system,
+                BlinkMacSystemFont,
+                system-ui,
+                Roboto,
+                sans-serif;
+
+            color: var(--text-main);
             line-height: 1.6;
+            background-color: var(--bg-color);
         }
 
         .container {
+            width: 100%;
             max-width: 1000px;
             margin: 0 auto;
         }
 
         header {
-            text-align: center;
             margin-bottom: 50px;
+            text-align: center;
         }
 
         header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            margin: 0 0 10px;
             color: #111;
+            font-size: 2.5rem;
         }
 
         header p {
+            margin: 0;
             color: var(--text-muted);
             font-size: 1.1rem;
         }
@@ -53,26 +70,22 @@
             gap: 30px;
         }
 
-        @media (max-width: 768px) {
-            .grid-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .subject-card {
-            background: var(--card-bg);
-            border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         .subject-title {
-            font-size: 1.8rem;
-            font-weight: 700;
             margin-top: 0;
             margin-bottom: 25px;
             padding-bottom: 15px;
+
+            font-size: 1.8rem;
+            font-weight: 700;
+
             border-bottom: 2px solid var(--border-color);
         }
 
@@ -94,13 +107,23 @@
 
         .btn {
             display: block;
+            width: 100%;
             padding: 15px 20px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
+
             font-size: 1.05rem;
-            transition: all 0.2s ease;
-            box-sizing: border-box;
+            font-weight: 600;
+            text-decoration: none;
+
+            border-radius: 10px;
+            transition:
+                transform 0.2s ease,
+                color 0.2s ease,
+                background-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
         }
 
         .ko-btn {
@@ -110,9 +133,9 @@
         }
 
         .ko-btn:hover {
+            color: #ffffff;
             background-color: var(--ko-color);
-            color: #fff;
-            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(232, 89, 12, 0.2);
         }
 
         .ma-btn {
@@ -122,57 +145,175 @@
         }
 
         .ma-btn:hover {
+            color: #ffffff;
             background-color: var(--ma-color);
-            color: #fff;
-            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(16, 152, 173, 0.2);
         }
 
         .ready-box {
             padding: 15px 20px;
-            border-radius: 10px;
-            background-color: #f1f3f5;
+
             color: #adb5bd;
-            border: 1px dashed #ced4da;
-            font-weight: 500;
             font-size: 1.05rem;
+            font-weight: 500;
             text-align: center;
+
+            background-color: #f1f3f5;
+            border: 1px dashed #ced4da;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 25px 15px;
+            }
+
+            header {
+                margin-bottom: 30px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .subject-card {
+                padding: 22px;
+            }
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
+
     <header>
         <h1>학업 성취도 평가 대시보드</h1>
-        <p>단원별 평가 결과를 확인하고 부족한 부분을 보완해보세요.</p>
+        <p>
+            단원별 평가 결과를 확인하고 부족한 부분을 보완해보세요.
+        </p>
     </header>
 
     <div class="grid-container">
-        <div class="subject-card korean">
-            <h2 class="subject-title">국어</h2>
-            <div class="unit-list">
-                <a href="./korean2-1-1/index.html" class="btn ko-btn ko-unit1">1단원. 시를 즐겨요</a>
-                <a href="./korean2-1-2/index.html" class="btn ko-btn ko-unit2">2단원. 내용을 간추려요</a>
-                <a href="./korean2-1-3/index.html" class="btn ko-btn ko-unit3">3단원. 느낌을 살려 말해요</a>
-                <a href="./korean2-1-4/index.html" class="btn ko-btn ko-unit4">4단원. 인물의 마음을 알아봐요</a>
-                <a href="./korean2-1-5/index.html" class="btn ko-btn ko-unit5">5단원. 알기 쉽게 설명해요</a>
-                <a href="./korean2-1-6/index.html" class="btn ko-btn ko-unit6">6단원. 일이 일어난 차례를 살펴요</a>
-                <a href="./korean2-1-7/index.html" class="btn ko-btn ko-unit7">7단원. 친구들에게 알려요</a>
-                <a href="./korean2-1-8/index.html" class="btn ko-btn ko-unit8">8단원. 마음을 소통해요</a>
-            </div>
-        </div>
 
-        <div class="subject-card math">
-            <h2 class="subject-title">수학</h2>
+        <!-- 국어 -->
+        <section class="subject-card korean">
+
+            <h2 class="subject-title">국어</h2>
+
             <div class="unit-list">
-                <a href="./math2-1-1/index.html" class="btn ma-btn">1단원. 세 자리 수</a>
-                <a href="./math2-1-2/index.html" class="btn ma-btn">2단원. 여러 가지 도형</a>
-                <a href="./math2-1-3/index.html" class="btn ma-btn">3단원. 덧셈과 뺄셈</a>
-                <a href="./math2-1-4/index.html" class="btn ma-btn">4단원. 길이재기</a>
-                <div class="ready-box">5단원 준비 중</div>
+
+                <a
+                    href="./korean2-1-1/index.html"
+                    class="btn ko-btn">
+                    1단원. 시를 즐겨요
+                </a>
+
+                <a
+                    href="./korean2-1-2/index.html"
+                    class="btn ko-btn">
+                    2단원. 내용을 간추려요
+                </a>
+
+                <a
+                    href="./korean2-1-3/index.html"
+                    class="btn ko-btn">
+                    3단원. 느낌을 살려 말해요
+                </a>
+
+                <a
+                    href="./korean2-1-4/index.html"
+                    class="btn ko-btn">
+                    4단원. 인물의 마음을 알아봐요
+                </a>
+
+                <a
+                    href="./korean2-1-5/index.html"
+                    class="btn ko-btn">
+                    5단원. 알기 쉽게 설명해요
+                </a>
+
+                <a
+                    href="./korean2-1-6/index.html"
+                    class="btn ko-btn">
+                    6단원. 일이 일어난 차례를 살펴요
+                </a>
+
+                <a
+                    href="./korean2-1-7/index.html"
+                    class="btn ko-btn">
+                    7단원. 친구들에게 알려요
+                </a>
+
+                <a
+                    href="./korean2-1-8/index.html"
+                    class="btn ko-btn">
+                    8단원. 마음을 소통해요
+                </a>
+
             </div>
-        </div>
+
+        </section>
+
+        <!-- 수학 -->
+        <section class="subject-card math">
+
+            <h2 class="subject-title">수학</h2>
+
+            <div class="unit-list">
+
+                <a
+                    href="./math2-1-1/index.html"
+                    class="btn ma-btn">
+                    1단원. 세 자리 수
+                </a>
+
+                <a
+                    href="./math2-1-2/index.html"
+                    class="btn ma-btn">
+                    2단원. 여러 가지 도형
+                </a>
+
+                <a
+                    href="./math2-1-3/index.html"
+                    class="btn ma-btn">
+                    3단원. 덧셈과 뺄셈
+                </a>
+
+                <a
+                    href="./math2-1-4/index.html"
+                    class="btn ma-btn">
+                    4단원. 길이 재기
+                </a>
+
+                <a
+                    href="./math2-1-5/index.html"
+                    class="btn ma-btn">
+                    5단원. 분류하기
+                </a>
+
+                <a
+                    href="./math2-1-6/index.html"
+                    class="btn ma-btn">
+                    6단원. 곱셈
+                </a>
+
+                <a
+                    href="./math2-1-7/index.html"
+                    class="btn ma-btn">
+                    7단원. 수학이랑 함께해요
+                </a>
+
+            </div>
+
+        </section>
+
     </div>
+
 </div>
 
 </body>
